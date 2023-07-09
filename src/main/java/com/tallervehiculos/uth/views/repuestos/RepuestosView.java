@@ -1,9 +1,12 @@
 package com.tallervehiculos.uth.views.repuestos;
 
 import com.tallervehiculos.uth.views.MainLayout;
+import com.tallervehiculos.uth.data.entity.repuestos;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasStyle;
-import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.html.OrderedList;
 import com.vaadin.flow.component.html.Paragraph;
@@ -26,25 +29,12 @@ import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 @PageTitle("Repuestos")
 @Route(value = "repuestos", layout = MainLayout.class)
 public class RepuestosView extends Main implements HasComponents, HasStyle {
-
-    private OrderedList imageContainer;
+	
+	private final Grid<repuestos> grid = new Grid<>(repuestos.class, false);
 
     public RepuestosView() {
         constructUI();
-
-        imageContainer.add(new RepuestosViewCard("Snow mountains under stars",
-                "https://images.unsplash.com/photo-1519681393784-d120267933ba?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80"));
-        imageContainer.add(new RepuestosViewCard("Snow covered mountain",
-                "https://images.unsplash.com/photo-1512273222628-4daea6e55abb?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80"));
-        imageContainer.add(new RepuestosViewCard("River between mountains",
-                "https://images.unsplash.com/photo-1536048810607-3dc7f86981cb?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=375&q=80"));
-        imageContainer.add(new RepuestosViewCard("Milky way on mountains",
-                "https://images.unsplash.com/photo-1515705576963-95cad62945b6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=750&q=80"));
-        imageContainer.add(new RepuestosViewCard("Mountain with fog",
-                "https://images.unsplash.com/photo-1513147122760-ad1d5bf68cdb?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"));
-        imageContainer.add(new RepuestosViewCard("Mountain at night",
-                "https://images.unsplash.com/photo-1562832135-14a35d25edef?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=815&q=80"));
-
+        constructUI2();
     }
 
     private void constructUI() {
@@ -55,22 +45,29 @@ public class RepuestosView extends Main implements HasComponents, HasStyle {
         container.addClassNames(AlignItems.CENTER, JustifyContent.BETWEEN);
 
         VerticalLayout headerContainer = new VerticalLayout();
-        H2 header = new H2("Beautiful photos");
+        H5 header = new H5("Repuestos Disponibles");
         header.addClassNames(Margin.Bottom.NONE, Margin.Top.XLARGE, FontSize.XXXLARGE);
-        Paragraph description = new Paragraph("Royalty free photos and pictures, courtesy of Unsplash");
-        description.addClassNames(Margin.Bottom.XLARGE, Margin.Top.NONE, TextColor.SECONDARY);
-        headerContainer.add(header, description);
+        headerContainer.add(header);
 
-        Select<String> sortBy = new Select<>();
-        sortBy.setLabel("Sort by");
-        sortBy.setItems("Popularity", "Newest first", "Oldest first");
-        sortBy.setValue("Popularity");
-
-        imageContainer = new OrderedList();
-        imageContainer.addClassNames(Gap.MEDIUM, Display.GRID, ListStyleType.NONE, Margin.NONE, Padding.NONE);
-
-        container.add(headerContainer, sortBy);
-        add(container, imageContainer);
+        container.add(headerContainer);
+        add(container);
 
     }
+    
+    
+    private void constructUI2() {
+    	
+    	HorizontalLayout container = new HorizontalLayout();
+        container.addClassNames(AlignItems.CENTER, JustifyContent.BETWEEN);
+        
+    	grid.addColumn(repuestos::getId_repuesto).setHeader("ID");
+    	grid.addColumn(repuestos::getNombre_repuesto).setHeader("Repuesto");
+    	grid.addColumn(repuestos::getPrecio).setHeader("Precio");
+    	grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
+    	grid.addClassName(Margin.Top.XLARGE);
+    	container.add(grid);
+        add(container);
+
+    }
+    
 }

@@ -1,7 +1,6 @@
 package com.tallervehiculos.uth.views.ordendereparación;
 
 import com.tallervehiculos.uth.data.entity.Orden_reparacion;
-import com.tallervehiculos.uth.data.service.Orden_reparacionService;
 import com.tallervehiculos.uth.views.MainLayout;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -42,17 +41,11 @@ public class OrdendeReparaciónView extends Div implements BeforeEnterObserver {
     private TextField descripcion_problema;
     private TextField estado_reparacion;
 
-    private final Button cancel = new Button("Cancel");
-    private final Button save = new Button("Save");
+    private final Button cancel = new Button("Cancelar");
+    private final Button save = new Button("Guardar");
+  
+    public OrdendeReparaciónView() {
 
-    private final BeanValidationBinder<Orden_reparacion> binder;
-
-    private Orden_reparacion orden_reparacion;
-
-    private final Orden_reparacionService orden_reparacionService;
-
-    public OrdendeReparaciónView(Orden_reparacionService orden_reparacionService) {
-        this.orden_reparacionService = orden_reparacionService;
         addClassNames("ordende-reparación-view");
 
         // Create UI
@@ -64,13 +57,13 @@ public class OrdendeReparaciónView extends Div implements BeforeEnterObserver {
         add(splitLayout);
 
         // Configure Grid
-        grid.addColumn("id_orden").setAutoWidth(true);
-        grid.addColumn("vehiculo_id").setAutoWidth(true);
-        grid.addColumn("descripcion_problema").setAutoWidth(true);
-        grid.addColumn("estado_reparacion").setAutoWidth(true);
-        grid.setItems(query -> orden_reparacionService.list(
+        grid.addColumn(Orden_reparacion::getId_orden).setHeader("ID").setAutoWidth(true);
+        grid.addColumn(Orden_reparacion::getVehiculo_id).setHeader("Vehiculo ID").setAutoWidth(true);
+        grid.addColumn(Orden_reparacion::getDescripcion_problema).setHeader("Problema").setAutoWidth(true);
+        grid.addColumn(Orden_reparacion::getEstado_reparacion).setHeader("Estado").setAutoWidth(true);
+        /*grid.setItems(query -> orden_reparacionService.list(
                 PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)))
-                .stream());
+                .stream());*/
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
 
         // when a row is selected or deselected, populate form
@@ -84,15 +77,6 @@ public class OrdendeReparaciónView extends Div implements BeforeEnterObserver {
         });
 
         // Configure Form
-        binder = new BeanValidationBinder<>(Orden_reparacion.class);
-
-        // Bind fields. This is where you'd define e.g. validation rules
-        binder.forField(id_orden).withConverter(new StringToIntegerConverter("Only numbers are allowed"))
-                .bind("id_orden");
-        binder.forField(vehiculo_id).withConverter(new StringToIntegerConverter("Only numbers are allowed"))
-                .bind("vehiculo_id");
-
-        binder.bindInstanceFields(this);
 
         cancel.addClickListener(e -> {
             clearForm();
@@ -100,7 +84,7 @@ public class OrdendeReparaciónView extends Div implements BeforeEnterObserver {
         });
 
         save.addClickListener(e -> {
-            try {
+            /*try {
                 if (this.orden_reparacion == null) {
                     this.orden_reparacion = new Orden_reparacion();
                 }
@@ -117,7 +101,7 @@ public class OrdendeReparaciónView extends Div implements BeforeEnterObserver {
                 n.addThemeVariants(NotificationVariant.LUMO_ERROR);
             } catch (ValidationException validationException) {
                 Notification.show("Failed to update the data. Check again that all values are valid");
-            }
+            }*/
         });
     }
 
@@ -125,7 +109,7 @@ public class OrdendeReparaciónView extends Div implements BeforeEnterObserver {
     public void beforeEnter(BeforeEnterEvent event) {
         Optional<Long> orden_reparacionId = event.getRouteParameters().get(ORDEN_REPARACION_ID).map(Long::parseLong);
         if (orden_reparacionId.isPresent()) {
-            Optional<Orden_reparacion> orden_reparacionFromBackend = orden_reparacionService
+            /*Optional<Orden_reparacion> orden_reparacionFromBackend = orden_reparacionService
                     .get(orden_reparacionId.get());
             if (orden_reparacionFromBackend.isPresent()) {
                 populateForm(orden_reparacionFromBackend.get());
@@ -136,7 +120,7 @@ public class OrdendeReparaciónView extends Div implements BeforeEnterObserver {
                 // refresh grid
                 refreshGrid();
                 event.forwardTo(OrdendeReparaciónView.class);
-            }
+            }*/
         }
     }
 
@@ -149,10 +133,10 @@ public class OrdendeReparaciónView extends Div implements BeforeEnterObserver {
         editorLayoutDiv.add(editorDiv);
 
         FormLayout formLayout = new FormLayout();
-        id_orden = new TextField("Id_orden");
-        vehiculo_id = new TextField("Vehiculo_id");
-        descripcion_problema = new TextField("Descripcion_problema");
-        estado_reparacion = new TextField("Estado_reparacion");
+        id_orden = new TextField("ID");
+        vehiculo_id = new TextField("Vehiculo ID");
+        descripcion_problema = new TextField("Problema");
+        estado_reparacion = new TextField("Estado");
         formLayout.add(id_orden, vehiculo_id, descripcion_problema, estado_reparacion);
 
         editorDiv.add(formLayout);
@@ -187,8 +171,8 @@ public class OrdendeReparaciónView extends Div implements BeforeEnterObserver {
     }
 
     private void populateForm(Orden_reparacion value) {
-        this.orden_reparacion = value;
-        binder.readBean(this.orden_reparacion);
+        //this.orden_reparacion = value;
+        //binder.readBean(this.orden_reparacion);
 
     }
 }

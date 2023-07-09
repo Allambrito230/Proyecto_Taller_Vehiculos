@@ -1,6 +1,5 @@
 package com.tallervehiculos.uth;
 
-import com.tallervehiculos.uth.data.service.SamplePersonRepository;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;
@@ -28,9 +27,9 @@ public class Application implements AppShellConfigurator {
         SpringApplication.run(Application.class, args);
     }
 
-    @Bean
+    /*@Bean
     SqlDataSourceScriptDatabaseInitializer dataSourceScriptDatabaseInitializer(DataSource dataSource,
-            SqlInitializationProperties properties, SamplePersonRepository repository) {
+            SqlInitializationProperties properties) {
         // This bean ensures the database is only initialized when empty
         return new SqlDataSourceScriptDatabaseInitializer(dataSource, properties) {
             @Override
@@ -41,5 +40,5 @@ public class Application implements AppShellConfigurator {
                 return false;
             }
         };
-    }
+    }*/
 }

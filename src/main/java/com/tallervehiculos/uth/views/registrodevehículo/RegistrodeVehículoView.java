@@ -1,7 +1,6 @@
 package com.tallervehiculos.uth.views.registrodevehículo;
 
 import com.tallervehiculos.uth.data.entity.Vehiculo;
-import com.tallervehiculos.uth.data.service.VehiculoService;
 import com.tallervehiculos.uth.views.MainLayout;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -45,17 +44,12 @@ public class RegistrodeVehículoView extends Div implements BeforeEnterObserver 
     private TextField modelo;
     private TextField placa;
 
-    private final Button cancel = new Button("Cancel");
-    private final Button save = new Button("Save");
+    private final Button cancel = new Button("Cancelar");
+    private final Button save = new Button("Guardar");
 
-    private final BeanValidationBinder<Vehiculo> binder;
 
-    private Vehiculo vehiculo;
-
-    private final VehiculoService vehiculoService;
-
-    public RegistrodeVehículoView(VehiculoService vehiculoService) {
-        this.vehiculoService = vehiculoService;
+    public RegistrodeVehículoView() {
+   
         addClassNames("registrode-vehículo-view");
 
         // Create UI
@@ -67,14 +61,14 @@ public class RegistrodeVehículoView extends Div implements BeforeEnterObserver 
         add(splitLayout);
 
         // Configure Grid
-        grid.addColumn("id_vehiculo").setAutoWidth(true);
-        grid.addColumn("nombre_cliente").setAutoWidth(true);
-        grid.addColumn("marca").setAutoWidth(true);
-        grid.addColumn("modelo").setAutoWidth(true);
-        grid.addColumn("placa").setAutoWidth(true);
-        grid.setItems(query -> vehiculoService.list(
+        grid.addColumn(Vehiculo::getId_vehiculo).setHeader("ID").setAutoWidth(true);
+        grid.addColumn(Vehiculo::getNombre_cliente).setHeader("Cliente").setAutoWidth(true);
+        grid.addColumn(Vehiculo::getMarca).setHeader("Marca").setAutoWidth(true);
+        grid.addColumn(Vehiculo::getModelo).setHeader("Modelo").setAutoWidth(true);
+        grid.addColumn(Vehiculo::getPlaca).setHeader("Placa").setAutoWidth(true);
+        /*grid.setItems(query -> vehiculoService.list(
                 PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)))
-                .stream());
+                .stream());*/
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
 
         // when a row is selected or deselected, populate form
@@ -88,13 +82,6 @@ public class RegistrodeVehículoView extends Div implements BeforeEnterObserver 
         });
 
         // Configure Form
-        binder = new BeanValidationBinder<>(Vehiculo.class);
-
-        // Bind fields. This is where you'd define e.g. validation rules
-        binder.forField(id_vehiculo).withConverter(new StringToIntegerConverter("Only numbers are allowed"))
-                .bind("id_vehiculo");
-
-        binder.bindInstanceFields(this);
 
         cancel.addClickListener(e -> {
             clearForm();
@@ -102,12 +89,11 @@ public class RegistrodeVehículoView extends Div implements BeforeEnterObserver 
         });
 
         save.addClickListener(e -> {
-            try {
+            /*try {
                 if (this.vehiculo == null) {
                     this.vehiculo = new Vehiculo();
                 }
-                binder.writeBean(this.vehiculo);
-                vehiculoService.update(this.vehiculo);
+                //vehiculoService.update(this.vehiculo);
                 clearForm();
                 refreshGrid();
                 Notification.show("Data updated");
@@ -119,7 +105,7 @@ public class RegistrodeVehículoView extends Div implements BeforeEnterObserver 
                 n.addThemeVariants(NotificationVariant.LUMO_ERROR);
             } catch (ValidationException validationException) {
                 Notification.show("Failed to update the data. Check again that all values are valid");
-            }
+            }*/
         });
     }
 
@@ -127,7 +113,7 @@ public class RegistrodeVehículoView extends Div implements BeforeEnterObserver 
     public void beforeEnter(BeforeEnterEvent event) {
         Optional<Long> vehiculoId = event.getRouteParameters().get(VEHICULO_ID).map(Long::parseLong);
         if (vehiculoId.isPresent()) {
-            Optional<Vehiculo> vehiculoFromBackend = vehiculoService.get(vehiculoId.get());
+            /*Optional<Vehiculo> vehiculoFromBackend = vehiculoService.get(vehiculoId.get());
             if (vehiculoFromBackend.isPresent()) {
                 populateForm(vehiculoFromBackend.get());
             } else {
@@ -137,7 +123,7 @@ public class RegistrodeVehículoView extends Div implements BeforeEnterObserver 
                 // refresh grid
                 refreshGrid();
                 event.forwardTo(RegistrodeVehículoView.class);
-            }
+            }*/
         }
     }
 
@@ -150,8 +136,8 @@ public class RegistrodeVehículoView extends Div implements BeforeEnterObserver 
         editorLayoutDiv.add(editorDiv);
 
         FormLayout formLayout = new FormLayout();
-        id_vehiculo = new TextField("Id_vehiculo");
-        nombre_cliente = new TextField("Nombre_cliente");
+        id_vehiculo = new TextField("ID");
+        nombre_cliente = new TextField("Cliente");
         marca = new TextField("Marca");
         modelo = new TextField("Modelo");
         placa = new TextField("Placa");
@@ -189,8 +175,8 @@ public class RegistrodeVehículoView extends Div implements BeforeEnterObserver 
     }
 
     private void populateForm(Vehiculo value) {
-        this.vehiculo = value;
-        binder.readBean(this.vehiculo);
+        //this.vehiculo = value;
+       //binder.readBean(this.vehiculo);
 
     }
 }
