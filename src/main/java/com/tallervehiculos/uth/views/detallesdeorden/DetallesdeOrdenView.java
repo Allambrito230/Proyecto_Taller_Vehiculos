@@ -30,9 +30,11 @@ import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+import com.vaadin.flow.component.treegrid.TreeGrid;
 
 @PageTitle("Detalles de Orden")
 @Route(value = "detalles-orden", layout = MainLayout.class)
@@ -69,7 +71,7 @@ public class DetallesdeOrdenView extends Div {
 
         return grid;
     }
-    
+ 
     private void refreshGrid() {
         grid.getDataProvider().refreshAll();
     }
