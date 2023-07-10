@@ -1,6 +1,11 @@
 package com.tallervehiculos.uth.views.ordendereparación;
 
+import com.tallervehiculos.uth.data.controller.OrdenReparacion_Interactor;
+import com.tallervehiculos.uth.data.controller.OrdenReparacion_InteractorImp;
+import com.tallervehiculos.uth.data.controller.OrdenVehiculos_Interactor;
+import com.tallervehiculos.uth.data.controller.OrdenVehiculos_InteractorImp;
 import com.tallervehiculos.uth.data.entity.Orden_reparacion;
+import com.tallervehiculos.uth.data.entity.Vehiculo;
 import com.tallervehiculos.uth.views.MainLayout;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -22,14 +27,20 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 @PageTitle("Orden de Reparación")
 @Route(value = "orden-reparacion/:orden_reparacionID?/:action?(edit)", layout = MainLayout.class)
-public class OrdendeReparaciónView extends Div implements BeforeEnterObserver {
+@RouteAlias(value = "", layout = MainLayout.class)
+public class OrdendeReparaciónView extends Div implements BeforeEnterObserver, OrdendeReparacionViewModel {
 
     private final String ORDEN_REPARACION_ID = "orden_reparacionID";
     private final String ORDEN_REPARACION_EDIT_ROUTE_TEMPLATE = "orden-reparacion/%s/edit";
@@ -40,13 +51,19 @@ public class OrdendeReparaciónView extends Div implements BeforeEnterObserver {
     private TextField vehiculo_id;
     private TextField descripcion_problema;
     private TextField estado_reparacion;
+    private List<Orden_reparacion> orden;
 
     private final Button cancel = new Button("Cancelar");
     private final Button save = new Button("Guardar");
+    
+    private Orden_reparacion ordenes;
+    private OrdenReparacion_Interactor controlador;
   
     public OrdendeReparaciónView() {
 
         addClassNames("ordende-reparación-view");
+        orden = new ArrayList<>();
+        this.controlador = new OrdenReparacion_InteractorImp(this);
 
         // Create UI
         SplitLayout splitLayout = new SplitLayout();
@@ -59,6 +76,7 @@ public class OrdendeReparaciónView extends Div implements BeforeEnterObserver {
         // Configure Grid
         grid.addColumn(Orden_reparacion::getId_orden).setHeader("ID").setAutoWidth(true);
         grid.addColumn(Orden_reparacion::getVehiculo_id).setHeader("Vehiculo ID").setAutoWidth(true);
+        //grid.addColumn(Orden_reparacion::getNombre).setHeader("Nombre").setAutoWidth(true);
         grid.addColumn(Orden_reparacion::getDescripcion_problema).setHeader("Problema").setAutoWidth(true);
         grid.addColumn(Orden_reparacion::getEstado_reparacion).setHeader("Estado").setAutoWidth(true);
         /*grid.setItems(query -> orden_reparacionService.list(
@@ -76,8 +94,10 @@ public class OrdendeReparaciónView extends Div implements BeforeEnterObserver {
             }
         });
 
+      //Mndo a traer las ordenes del repositorio
+        this.controlador.consultarOrden();
+        
         // Configure Form
-
         cancel.addClickListener(e -> {
             clearForm();
             refreshGrid();
@@ -173,6 +193,13 @@ public class OrdendeReparaciónView extends Div implements BeforeEnterObserver {
     private void populateForm(Orden_reparacion value) {
         //this.orden_reparacion = value;
         //binder.readBean(this.orden_reparacion);
-
     }
+    
+    @Override
+	public void refrescarGridVehiculos(List<Orden_reparacion> orden) {
+		Collection<Orden_reparacion> items = orden;
+		grid.setItems(items);
+		this.orden = orden;
+		
+	}
 }

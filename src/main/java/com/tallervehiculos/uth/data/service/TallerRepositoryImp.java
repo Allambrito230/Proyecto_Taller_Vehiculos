@@ -10,10 +10,10 @@ import retrofit2.Response;
 public class TallerRepositoryImp {
 
 	private static TallerRepositoryImp instance;
-	private RepositoryTaller vehiculo;
+	private RepositoryTaller taller;
 	
 	private TallerRepositoryImp(String url, Long timeout) {
-		this.vehiculo = new RepositoryTaller(url, timeout);
+		this.taller = new RepositoryTaller(url, timeout);
 	}
 	
 	//IMPLEMENTANDO PATRÓN SINGLETON
@@ -29,7 +29,17 @@ public class TallerRepositoryImp {
 	}
 	
 	public ResponseTaller getvehiculo() throws IOException {
-		Call<ResponseTaller> call = vehiculo.getDatabaseService().obtenerVehiculo();
+		Call<ResponseTaller> call = taller.getDatabaseService().obtenerVehiculo();
+		Response<ResponseTaller> response = call.execute(); //AQUI ES DONDE SE CONSULTA A LA URL DE LA BASE DE DATOS
+		if(response.isSuccessful()){
+			return response.body();
+		}else {
+			return null;
+		}
+	}
+	
+	public ResponseTaller getOrden() throws IOException {
+		Call<ResponseTaller> call = taller.getDatabaseService().obtenerOrden();
 		Response<ResponseTaller> response = call.execute(); //AQUI ES DONDE SE CONSULTA A LA URL DE LA BASE DE DATOS
 		if(response.isSuccessful()){
 			return response.body();

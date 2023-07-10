@@ -84,14 +84,14 @@ public class RegistrodeVehículoView extends Div implements BeforeEnterObserver,
         // when a row is selected or deselected, populate form
         grid.asSingleSelect().addValueChangeListener(event -> {
             if (event.getValue() != null) {
-                UI.getCurrent().navigate(String.format(VEHICULO_EDIT_ROUTE_TEMPLATE, event.getValue().getId()));
+                UI.getCurrent().navigate(String.format(VEHICULO_EDIT_ROUTE_TEMPLATE, event.getValue().getId_vehiculo()));
             } else {
                 clearForm();
                 UI.getCurrent().navigate(RegistrodeVehículoView.class);
             }
         });
 
-        //Mndo a traer los empleados del repositorio
+        //Mndo a traer los vhiculos del repositorio
         this.controlador.consultarVehiculo();
         
         // Configure Form
@@ -212,7 +212,7 @@ public class RegistrodeVehículoView extends Div implements BeforeEnterObserver,
             this.modelo.setValue("");
             this.placa.setValue("");
         } else {
-        	this.id_vehiculo.setValue(String.valueOf(value.getId_vehiculo()));
+        	this.id_vehiculo.setValue(value.getId_vehiculo());
             this.nombre_cliente.setValue(value.getNombre_cliente());
             this.marca.setValue(value.getMarca());
             this.modelo.setValue(value.getModelo());

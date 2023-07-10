@@ -17,4 +17,7 @@ public interface TallerRepository {
 	@GET("/pls/apex/allantorres_pa/vehiculos/registro_vehiculo/")
 	Call<ResponseTaller> obtenerVehiculo();
 	
+	@GET("/pls/apex/allantorres_pa/vehiculos/orden_reparacion/")
+	Call<ResponseTaller> obtenerOrden();
+	
 }
