@@ -3,7 +3,7 @@ package com.tallervehiculos.uth.data.entity;
 import java.util.List;
 
 
-public class ResponseVehiculo {
+public class ResponseTaller {
 
 	private List<Vehiculo> items;
 	private boolean hasMore;

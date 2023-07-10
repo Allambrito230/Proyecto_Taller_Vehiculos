@@ -1,5 +1,7 @@
 package com.tallervehiculos.uth.views.registrodevehículo;
 
+import com.tallervehiculos.uth.data.controller.OrdenVehiculos_Interactor;
+import com.tallervehiculos.uth.data.controller.OrdenVehiculos_InteractorImp;
 import com.tallervehiculos.uth.data.entity.Vehiculo;
 import com.tallervehiculos.uth.views.MainLayout;
 import com.vaadin.flow.component.UI;
@@ -24,6 +26,9 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
+import java.util.Collection;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -31,7 +36,7 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 @PageTitle("Registro de Vehículo")
 @Route(value = "registro-vehiculo/:vehiculoID?/:action?(edit)", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
-public class RegistrodeVehículoView extends Div implements BeforeEnterObserver {
+public class RegistrodeVehículoView extends Div implements BeforeEnterObserver, registrodevehiculoViewModel {
 
     private final String VEHICULO_ID = "vehiculoID";
     private final String VEHICULO_EDIT_ROUTE_TEMPLATE = "registro-vehiculo/%s/edit";
@@ -43,15 +48,20 @@ public class RegistrodeVehículoView extends Div implements BeforeEnterObserver 
     private TextField marca;
     private TextField modelo;
     private TextField placa;
-
+    private List<Vehiculo> vehiculos;
+    
     private final Button cancel = new Button("Cancelar");
     private final Button save = new Button("Guardar");
 
-
+    private Vehiculo vehiculo;
+    private OrdenVehiculos_Interactor controlador;
+    
     public RegistrodeVehículoView() {
    
         addClassNames("registrode-vehículo-view");
-
+        vehiculos = new ArrayList<>();
+        this.controlador = new OrdenVehiculos_InteractorImp(this);
+        
         // Create UI
         SplitLayout splitLayout = new SplitLayout();
 
@@ -81,15 +91,17 @@ public class RegistrodeVehículoView extends Div implements BeforeEnterObserver 
             }
         });
 
+        //Mndo a traer los empleados del repositorio
+        this.controlador.consultarVehiculo();
+        
         // Configure Form
-
         cancel.addClickListener(e -> {
             clearForm();
             refreshGrid();
         });
 
         save.addClickListener(e -> {
-            /*try {
+            try {
                 if (this.vehiculo == null) {
                     this.vehiculo = new Vehiculo();
                 }
@@ -103,9 +115,7 @@ public class RegistrodeVehículoView extends Div implements BeforeEnterObserver 
                         "Error updating the data. Somebody else has updated the record while you were making changes.");
                 n.setPosition(Position.MIDDLE);
                 n.addThemeVariants(NotificationVariant.LUMO_ERROR);
-            } catch (ValidationException validationException) {
-                Notification.show("Failed to update the data. Check again that all values are valid");
-            }*/
+            }
         });
     }
 
@@ -175,8 +185,15 @@ public class RegistrodeVehículoView extends Div implements BeforeEnterObserver 
     }
 
     private void populateForm(Vehiculo value) {
-        //this.vehiculo = value;
-       //binder.readBean(this.vehiculo);
+        this.vehiculo = value;
 
     }
+
+	@Override
+	public void refrescarGridVehiculos(List<Vehiculo> vehiculos) {
+		Collection<Vehiculo> items = vehiculos;
+		grid.setItems(items);
+		this.vehiculos = vehiculos;
+		
+	}
 }

@@ -1,7 +1,7 @@
 package com.tallervehiculos.uth.data.service;
 
 
-import com.tallervehiculos.uth.data.entity.ResponseVehiculo;
+import com.tallervehiculos.uth.data.entity.ResponseTaller;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -14,7 +14,7 @@ public interface TallerRepository {
 	    "Accept-Charset: utf-8",
 	    "User-Agent: Retrofit-Sample-App"
 	})
-	@GET("/https://apex.oracle.com/pls/apex/allantorres_pa/vehiculos/registro_vehiculo/")
-	Call<ResponseVehiculo> obtenerEmpleados();
+	@GET("/pls/apex/allantorres_pa/vehiculos/registro_vehiculo/")
+	Call<ResponseTaller> obtenerVehiculo();
 	
 }
