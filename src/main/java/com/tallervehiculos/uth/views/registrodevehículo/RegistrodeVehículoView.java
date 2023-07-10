@@ -121,8 +121,27 @@ public class RegistrodeVehículoView extends Div implements BeforeEnterObserver,
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        Optional<Long> vehiculoId = event.getRouteParameters().get(VEHICULO_ID).map(Long::parseLong);
+        Optional<String> vehiculoId = event.getRouteParameters().get(VEHICULO_ID);
+        boolean encontrado = false;
         if (vehiculoId.isPresent()) {
+        	
+        	for(Vehiculo e: this.vehiculos) {
+        		if(e.getId_vehiculo().equals(vehiculoId.get())) {
+        			populateForm(e);
+        			encontrado = true;
+        			break;
+        		}
+        	}
+        	
+        	if(!encontrado) {
+        		Notification.show(String.format("El Vehiculo con ID = %s", vehiculoId.get()+" no fue encontrado"),
+                        3000, Notification.Position.BOTTOM_START);
+                // when a row is selected but the data is no longer available,
+                // refresh grid
+                refreshGrid();
+                event.forwardTo(RegistrodeVehículoView.class);
+        	}
+        	
             /*Optional<Vehiculo> vehiculoFromBackend = vehiculoService.get(vehiculoId.get());
             if (vehiculoFromBackend.isPresent()) {
                 populateForm(vehiculoFromBackend.get());
@@ -185,8 +204,20 @@ public class RegistrodeVehículoView extends Div implements BeforeEnterObserver,
     }
 
     private void populateForm(Vehiculo value) {
-        this.vehiculo = value;
-
+    	this.vehiculo = value;
+        if(value == null){
+        	this.id_vehiculo.setValue("");
+            this.nombre_cliente.setValue("");
+            this.marca.setValue("");
+            this.modelo.setValue("");
+            this.placa.setValue("");
+        } else {
+        	this.id_vehiculo.setValue(String.valueOf(value.getId_vehiculo()));
+            this.nombre_cliente.setValue(value.getNombre_cliente());
+            this.marca.setValue(value.getMarca());
+            this.modelo.setValue(value.getModelo());
+            this.placa.setValue(value.getPlaca());
+        }
     }
 
 	@Override
