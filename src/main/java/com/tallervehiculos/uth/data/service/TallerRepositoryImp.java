@@ -38,6 +38,7 @@ public class TallerRepositoryImp {
 		}
 	}
 	
+	
 	public ResponseTaller getOrden() throws IOException {
 		Call<ResponseTaller> call = taller.getDatabaseService().obtenerOrden();
 		Response<ResponseTaller> response = call.execute(); //AQUI ES DONDE SE CONSULTA A LA URL DE LA BASE DE DATOS

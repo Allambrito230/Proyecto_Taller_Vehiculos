@@ -21,7 +21,7 @@ public class OrdenReparacion_InteractorImp  implements OrdenReparacion_Interacto
 	public void consultarOrden() {
 		try {
 			ResponseTaller respuesta = this.modelo.getOrden();
-			this.vista.refrescarGridOrden(respuesta.getItems());
+			this.vista.refrescarGridOrden(respuesta.getItems_orden());
 		}catch(IOException e) {
 			e.printStackTrace();
 		}

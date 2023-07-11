@@ -5,29 +5,29 @@ import jakarta.persistence.Entity;
 @Entity
 public class Orden_reparacion extends AbstractEntity {
 
-    private Integer id_orden;
-    private Integer vehiculo_id;
-    private String nombre;
+    private String id_orden;
+    private String vehiculo_id;
+    //private String nombre;
 	private String descripcion_problema;
     private String estado_reparacion;
 
     
-    public String getNombre() {
+    /*public String getNombre() {
 		return nombre;
 	}
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
-	}
-    public Integer getId_orden() {
+	}*/
+    public String getId_orden() {
         return id_orden;
     }
-    public void setId_orden(Integer id_orden) {
+    public void setId_orden(String id_orden) {
         this.id_orden = id_orden;
     }
-    public Integer getVehiculo_id() {
+    public String getVehiculo_id() {
         return vehiculo_id;
     }
-    public void setVehiculo_id(Integer vehiculo_id) {
+    public void setVehiculo_id(String vehiculo_id) {
         this.vehiculo_id = vehiculo_id;
     }
     public String getDescripcion_problema() {

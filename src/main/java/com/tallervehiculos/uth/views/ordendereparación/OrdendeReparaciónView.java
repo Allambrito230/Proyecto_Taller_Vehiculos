@@ -7,6 +7,7 @@ import com.tallervehiculos.uth.data.controller.OrdenVehiculos_InteractorImp;
 import com.tallervehiculos.uth.data.entity.Orden_reparacion;
 import com.tallervehiculos.uth.data.entity.Vehiculo;
 import com.tallervehiculos.uth.views.MainLayout;
+import com.tallervehiculos.uth.views.registrodevehículo.RegistrodeVehículoView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -39,7 +40,6 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 @PageTitle("Orden de Reparación")
 @Route(value = "orden-reparacion/:orden_reparacionID?/:action?(edit)", layout = MainLayout.class)
-@RouteAlias(value = "", layout = MainLayout.class)
 public class OrdendeReparaciónView extends Div implements BeforeEnterObserver, OrdendeReparacionViewModel {
 
     private final String ORDEN_REPARACION_ID = "orden_reparacionID";
@@ -87,7 +87,7 @@ public class OrdendeReparaciónView extends Div implements BeforeEnterObserver, 
         // when a row is selected or deselected, populate form
         grid.asSingleSelect().addValueChangeListener(event -> {
             if (event.getValue() != null) {
-                UI.getCurrent().navigate(String.format(ORDEN_REPARACION_EDIT_ROUTE_TEMPLATE, event.getValue().getId()));
+                UI.getCurrent().navigate(String.format(ORDEN_REPARACION_EDIT_ROUTE_TEMPLATE, event.getValue().getId_orden()));
             } else {
                 clearForm();
                 UI.getCurrent().navigate(OrdendeReparaciónView.class);
@@ -104,12 +104,11 @@ public class OrdendeReparaciónView extends Div implements BeforeEnterObserver, 
         });
 
         save.addClickListener(e -> {
-            /*try {
-                if (this.orden_reparacion == null) {
-                    this.orden_reparacion = new Orden_reparacion();
+            try {
+                if (this.ordenes == null) {
+                    this.ordenes = new Orden_reparacion();
                 }
-                binder.writeBean(this.orden_reparacion);
-                orden_reparacionService.update(this.orden_reparacion);
+                //.update(this.orden_reparacion);
                 clearForm();
                 refreshGrid();
                 Notification.show("Data updated");
@@ -119,28 +118,30 @@ public class OrdendeReparaciónView extends Div implements BeforeEnterObserver, 
                         "Error updating the data. Somebody else has updated the record while you were making changes.");
                 n.setPosition(Position.MIDDLE);
                 n.addThemeVariants(NotificationVariant.LUMO_ERROR);
-            } catch (ValidationException validationException) {
-                Notification.show("Failed to update the data. Check again that all values are valid");
-            }*/
+            }
         });
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        Optional<Long> orden_reparacionId = event.getRouteParameters().get(ORDEN_REPARACION_ID).map(Long::parseLong);
+        Optional<String> orden_reparacionId = event.getRouteParameters().get(ORDEN_REPARACION_ID);
+        boolean encontrado = false;
         if (orden_reparacionId.isPresent()) {
-            /*Optional<Orden_reparacion> orden_reparacionFromBackend = orden_reparacionService
-                    .get(orden_reparacionId.get());
-            if (orden_reparacionFromBackend.isPresent()) {
-                populateForm(orden_reparacionFromBackend.get());
-            } else {
-                Notification.show(String.format("The requested orden_reparacion was not found, ID = %s",
-                        orden_reparacionId.get()), 3000, Notification.Position.BOTTOM_START);
+        	for(Orden_reparacion e: this.orden) {
+        		if(e.getId_orden().equals(orden_reparacionId.get())) {
+        			populateForm(e);
+        			encontrado = true;
+        			break;
+        		}
+        	}
+        	if(!encontrado) {
+        		Notification.show(String.format("La orden de reparacion con ID = %s", orden_reparacionId.get()+" no fue encontrada"),
+                        3000, Notification.Position.BOTTOM_START);
                 // when a row is selected but the data is no longer available,
                 // refresh grid
                 refreshGrid();
                 event.forwardTo(OrdendeReparaciónView.class);
-            }*/
+        	}
         }
     }
 
@@ -191,15 +192,27 @@ public class OrdendeReparaciónView extends Div implements BeforeEnterObserver, 
     }
 
     private void populateForm(Orden_reparacion value) {
-        //this.orden_reparacion = value;
-        //binder.readBean(this.orden_reparacion);
+    	this.ordenes = value;
+    	
+        if(value == null){
+        	this.id_orden.setValue("");
+            this.vehiculo_id.setValue("");
+            this.descripcion_problema.setValue("");
+            this.estado_reparacion.setValue("");
+        } else {
+        	this.id_orden.setValue(value.getId_orden());
+            this.vehiculo_id.setValue(value.getVehiculo_id());
+            this.descripcion_problema.setValue(value.getDescripcion_problema());
+            this.estado_reparacion.setValue(value.getEstado_reparacion());
+
+        }
     }
     
     @Override
-	public void refrescarGridVehiculos(List<Orden_reparacion> orden) {
-		Collection<Orden_reparacion> items = orden;
+	public void refrescarGridOrden(List<Orden_reparacion> items_orden) {
+		Collection<Orden_reparacion> items = items_orden;
 		grid.setItems(items);
-		this.orden = orden;
+		this.orden = items_orden;
 		
 	}
 }

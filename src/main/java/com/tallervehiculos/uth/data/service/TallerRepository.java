@@ -17,6 +17,13 @@ public interface TallerRepository {
 	@GET("/pls/apex/allantorres_pa/vehiculos/registro_vehiculo/")
 	Call<ResponseTaller> obtenerVehiculo();
 	
+	
+	
+	@Headers({
+	    "Content-Type: application/json",
+	    "Accept-Charset: utf-8",
+	    "User-Agent: Retrofit-Sample-App"
+	})
 	@GET("/pls/apex/allantorres_pa/vehiculos/orden_reparacion/")
 	Call<ResponseTaller> obtenerOrden();
 	

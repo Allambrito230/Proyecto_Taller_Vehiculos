@@ -141,18 +141,6 @@ public class RegistrodeVehículoView extends Div implements BeforeEnterObserver,
                 refreshGrid();
                 event.forwardTo(RegistrodeVehículoView.class);
         	}
-        	
-            /*Optional<Vehiculo> vehiculoFromBackend = vehiculoService.get(vehiculoId.get());
-            if (vehiculoFromBackend.isPresent()) {
-                populateForm(vehiculoFromBackend.get());
-            } else {
-                Notification.show(String.format("The requested vehiculo was not found, ID = %s", vehiculoId.get()),
-                        3000, Notification.Position.BOTTOM_START);
-                // when a row is selected but the data is no longer available,
-                // refresh grid
-                refreshGrid();
-                event.forwardTo(RegistrodeVehículoView.class);
-            }*/
         }
     }
 
